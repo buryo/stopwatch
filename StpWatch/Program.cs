@@ -10,11 +10,9 @@ namespace StpWatch
 
         static void Main(string[] args)
         {
-            
-            Console.WriteLine("Press X to quit");
-            Console.WriteLine("----------------------");
 
             int UserInput = DisplayMenu();
+            State state = State.WAITING;
 
             do
             {
@@ -22,7 +20,9 @@ namespace StpWatch
                 {
                     case 1:
                         Console.Clear();
-                        if (State.STARTED)
+                        if (state == State.STARTED)
+                            throw new InvalidOperationException();
+                        state = State.STARTED;
 
                         Console.WriteLine("Stopwatch started, enter 'D' to stop.");
                         Console.WriteLine(stopWatch.Elapsed);
@@ -31,13 +31,14 @@ namespace StpWatch
                         break;
                     case 2:
                         Console.Clear();
+                        if (state == State.WAITING)
+                            throw new InvalidOperationException();
+                        state = State.WAITING;
+
                         Console.WriteLine("Stopwatch stopped, enter 'S' to start again.");
                         stopWatch.Stop();
                         Console.WriteLine(stopWatch.Elapsed);
                         UserInput = DisplayMenu();
-                        break;
-                    case 3:
-                        Environment.Exit(0);
                         break;
                     default:
                         UserInput = DisplayMenu();
